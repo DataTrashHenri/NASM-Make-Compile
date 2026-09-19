@@ -23,11 +23,11 @@ void read_int_from_bin() {
 
     long *buffer = malloc(fsize);
     fread(buffer,sizeof(buffer),longs,ptr);
-    printf("%li integer(s) found->\n",longs);
+    printf("%li integer(s)->\n",longs);
     for (int i = 0; i < longs;i++) {
         printf("int(%i)= %li\n",i,buffer[i]);
     }
-    free(ptr);
+    fclose(ptr);
     free(buffer);
 }
 void read_float_from_bin() {
@@ -41,11 +41,11 @@ void read_float_from_bin() {
 
     double *buffer = malloc(fsize);
     fread(buffer,sizeof(buffer),floats,ptr);
-    printf("%li float(s) found->\n",floats);
+    printf("%li float(s)->\n",floats);
     for (int i = 0; i < floats;i++) {
         printf("float(%i)= %f\n",i,buffer[i]);
     }
-    free(ptr);
+    fclose(ptr);
     free(buffer);
 }
 bool folders_ok() {
@@ -103,6 +103,10 @@ int main(int argc,char** argv) {
                 read_int_from_bin();
             else if (!strcmp(argv[2],"floats"))
                 read_float_from_bin();
+            else if (!strcmp(argv[2],"all")) {
+                read_float_from_bin();
+                read_int_from_bin();
+            }
             else error_log("either unkonw or not yet implemented type");
         }
     }    

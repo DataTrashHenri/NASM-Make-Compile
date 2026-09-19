@@ -43,7 +43,7 @@ void read_float_from_bin() {
     fread(buffer,sizeof(buffer),floats,ptr);
     printf("%li float(s)->\n",floats);
     for (int i = 0; i < floats;i++) {
-        printf("float(%i)= %f\n",i,buffer[i]);
+        printf("float(%i)= %.12f\n",i,buffer[i]);
     }
     fclose(ptr);
     free(buffer);
@@ -75,7 +75,6 @@ int main(int argc,char** argv) {
     }
     if(!strcmp(argv[1],"--help")) {
         printf("- nmc init for new project\n");
-        printf("- nmc compile to compile\n");
         printf("- nmc run to compile & run\n");
         printf("- nmc fuckitall to delete the project\n");
         printf("- nmc git xx for basic git usage\n");

@@ -2,6 +2,7 @@
 #include<stdbool.h>
 #include<string.h>
 #include<stdlib.h>
+#include<dirent.h>
 bool valid_input(int argc,char** argv) {
     return argc > 1;
 }
@@ -35,17 +36,37 @@ void read_float_from_bin() {
     
     fseek(ptr, 0, SEEK_END);
     long fsize = ftell(ptr);
-    long floats = fsize/4;
+    long floats = fsize/sizeof(double);
     rewind(ptr);
 
-    float *buffer = malloc(fsize);
+    double *buffer = malloc(fsize);
     fread(buffer,sizeof(buffer),floats,ptr);
     printf("%li float(s) found->\n",floats);
     for (int i = 0; i < floats;i++) {
-        printf("int(%i)= %f\n",i,buffer[i]);
+        printf("float(%i)= %f\n",i,buffer[i]);
     }
     free(ptr);
     free(buffer);
+}
+bool folders_ok() {
+    DIR *src = opendir("src");
+    DIR *build = opendir("build");
+    if (build && src){
+        closedir(src);
+        closedir(build);
+        return 1;
+    }
+    closedir(src);
+    closedir(build);
+    return 0;
+}
+bool files_ok() {
+    FILE *main = fopen("src/main.asm","r");
+    if (main != NULL){
+        fclose(main);
+        return 1;
+    }
+    return 0;
 }
 int main(int argc,char** argv) {
     if (!valid_input(argc,argv)){
@@ -57,6 +78,8 @@ int main(int argc,char** argv) {
         printf("- nmc compile to compile\n");
         printf("- nmc run to compile & run\n");
         printf("- nmc fuckitall to delete the project\n");
+        printf("- nmc git xx for basic git usage\n");
+        printf("- nmc status to check wheter project was set up correctly\n");
     } else if (!strcmp(argv[1],"init")) {
         system("mkdir src");
         system("mkdir build");
@@ -74,9 +97,39 @@ int main(int argc,char** argv) {
         service_log("Execution started");
         system("./out > ./build/out.bin");
         service_log("Execution finished");
-        printf("Extracted binarycontent:\n");
-        read_int_from_bin();
+        if(argc>2) {
+            printf("Extracted binarycontent:\n");
+            if(!strcmp(argv[2],"ints"))
+                read_int_from_bin();
+            else if (!strcmp(argv[2],"floats"))
+                read_float_from_bin();
+            else error_log("either unkonw or not yet implemented type");
+        }
     }    
+    else if (!strcmp(argv[1],"status")) {
+        if (folders_ok()) {
+            service_log("folder structure   OK");
+        } else {
+            error_log("missing folders..");
+        }
+        if(files_ok()) {
+            service_log("assembly files     OK");
+        } else {
+            error_log("missing any assembly files");
+        }
+    }
+    else if (!strcmp(argv[1],"git")) {
+        if (argc < 3) {
+            error_log("missing statement");
+        } else {
+            char cmd[99];
+            if (argc ==3)
+                sprintf(cmd,"git %s",argv[2]);
+            if (argc ==4)
+                sprintf(cmd,"git %s %s",argv[2],argv[3]);
+            system(cmd);
+        }
+    }
     else {
         error_log("Unknown command, use --help for more info\n");
     }

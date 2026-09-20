@@ -51,15 +51,15 @@ int main(int argc,char** argv) {
         log_std("Execution finished");
         if(argc>2) {
             printf("Extracted binarycontent:\n");
-            if(!strcmp(argv[2],"ints"))
+            if(!strcmp(argv[2],"int"))
                 read_bin_int();
-            else if (!strcmp(argv[2],"floats"))
+            else if (!strcmp(argv[2],"float"))
                 read_bin_float();
             else if (!strcmp(argv[2],"all")) {
                 read_bin_float();
                 read_bin_int();
             }
-            else log_error("either unkonw or not yet implemented type");
+            else log_error("either unknown or not yet implemented type");
         }
     }
     else if (!strcmp(argv[1],"status")) {

@@ -91,8 +91,9 @@ int main(int argc,char** argv) {
         system("rm -fr build src out");
         service_log("removed build and source folders");
     } else if (!strcmp(argv[1],"run")) {
-        system("nasm -felf64 ./src/main.asm -o ./build/main.o");
-        system("ld ./build/main.o -o out");
+        system("nasm -felf64 .src/main.asm -o ./build/main.o");
+        system("nasm -felf64 ~/nmc/libs/pout.asm -o ./build/pout.o");
+        system("ld ./build/main.o ./build/pout.o -o out");
         service_log("Execution started");
         system("./out > ./build/out.bin");
         service_log("Execution finished");

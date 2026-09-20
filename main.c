@@ -3,49 +3,14 @@
 #include<string.h>
 #include<stdlib.h>
 #include<dirent.h>
+
 #include "print.h"
 #include "validate.h"
+#include "read_from_bin.h"
 
 bool valid_input(int argc,char** argv) {
     return argc > 1;
 }
-void read_int_from_bin() {
-    FILE *ptr;
-    ptr = fopen("./build/out.bin","rb");
-    
-    fseek(ptr, 0, SEEK_END);
-    long fsize = ftell(ptr);
-    long longs = fsize/8;
-    rewind(ptr);
-
-    long *buffer = malloc(fsize);
-    fread(buffer,sizeof(buffer),longs,ptr);
-    printf("%li integer(s)->\n",longs);
-    for (int i = 0; i < longs;i++) {
-        printf("int(%i)= \033[32m%li\033[0m\n",i,buffer[i]);
-    }
-    fclose(ptr);
-    free(buffer);
-}
-void read_float_from_bin() {
-    FILE *ptr;
-    ptr = fopen("./build/out.bin","rb");
-    
-    fseek(ptr, 0, SEEK_END);
-    long fsize = ftell(ptr);
-    long floats = fsize/sizeof(double);
-    rewind(ptr);
-
-    double *buffer = malloc(fsize);
-    fread(buffer,sizeof(buffer),floats,ptr);
-    printf("%li float(s)->\n",floats);
-    for (int i = 0; i < floats;i++) {
-        printf("float(%i)= \033[32m%.12f\033[0m\n",i,buffer[i]);
-    }
-    fclose(ptr);
-    free(buffer);
-}
-
 void print_dir_content(char *src) {
     DIR* dir = opendir(src);
     if (dir == NULL) printf("shit\n");
@@ -87,12 +52,12 @@ int main(int argc,char** argv) {
         if(argc>2) {
             printf("Extracted binarycontent:\n");
             if(!strcmp(argv[2],"ints"))
-                read_int_from_bin();
+                read_bin_int();
             else if (!strcmp(argv[2],"floats"))
-                read_float_from_bin();
+                read_bin_float();
             else if (!strcmp(argv[2],"all")) {
-                read_float_from_bin();
-                read_int_from_bin();
+                read_bin_float();
+                read_bin_int();
             }
             else log_error("either unkonw or not yet implemented type");
         }

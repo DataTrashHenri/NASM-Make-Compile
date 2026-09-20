@@ -68,6 +68,16 @@ bool files_ok() {
     }
     return 0;
 }
+void print_dir_content(char *src) {
+    DIR* dir = opendir(src);
+    if (dir == NULL) printf("shit\n");
+    struct dirent *entry;
+    while((entry = readdir(dir))!= NULL) {
+        if (entry->d_type == DT_REG && entry->d_name[0] != '.')
+            printf("✓ %s\n",entry->d_name);
+    }
+    closedir(dir);
+}
 int main(int argc,char** argv) {
     if (!valid_input(argc,argv)){
         error_log("--help for commands");
@@ -91,7 +101,7 @@ int main(int argc,char** argv) {
         system("rm -fr build src out");
         service_log("removed build and source folders");
     } else if (!strcmp(argv[1],"run")) {
-        system("nasm -felf64 .src/main.asm -o ./build/main.o");
+        system("nasm -felf64 ./src/main.asm -o ./build/main.o");
         system("nasm -felf64 ~/nmc/libs/pout.asm -o ./build/pout.o");
         system("ld ./build/main.o ./build/pout.o -o out");
         service_log("Execution started");
@@ -114,13 +124,16 @@ int main(int argc,char** argv) {
         if (folders_ok()) {
             service_log("folder structure   OK");
         } else {
-            error_log("missing folders..");
+            error_log("folder structure   MISSING");
         }
         if(files_ok()) {
             service_log("assembly files     OK");
         } else {
-            error_log("missing any assembly files");
+            error_log("assembly files     NOT_FOUND");
         }
+        printf("\nincluded libaries:\n");
+        print_dir_content("/root/nmc/libs/");
+
     }
     else if (!strcmp(argv[1],"git")) {
         if (argc < 3) {

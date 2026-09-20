@@ -8,19 +8,6 @@
 #include "validate.h"
 #include "read_from_bin.h"
 
-bool valid_input(int argc,char** argv) {
-    return argc > 1;
-}
-void print_dir_content(char *src) {
-    DIR* dir = opendir(src);
-    if (dir == NULL) printf("shit\n");
-    struct dirent *entry;
-    while((entry = readdir(dir))!= NULL) {
-        if (entry->d_type == DT_REG && entry->d_name[0] != '.')
-            printf("✓ %s\n",entry->d_name);
-    }
-    closedir(dir);
-}
 int main(int argc,char** argv) {
     if (!valid_input(argc,argv)){
         log_error("--help for commands");

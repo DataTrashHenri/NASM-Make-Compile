@@ -33,7 +33,7 @@ void read_bin_float() {
     fread(buffer,sizeof(buffer),floats,ptr);
     printf("\033[33m%li\033[0m float(s)->\n",floats);
     for (int i = 0; i < floats;i++) {
-        printf("float(%i)= \033[32m%.12f\033[0m\n",i,buffer[i]);
+        printf("float(%i)= \033[32m%.15f\033[0m\n",i,buffer[i]);
     }
     fclose(ptr);
     free(buffer);

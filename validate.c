@@ -5,6 +5,9 @@
 
 #include "validate.h"
 
+bool valid_input(int argc,char** argv) {
+    return argc > 1;
+}
 bool files_ok() {
     FILE *main = fopen("src/main.asm","r");
     if (main != NULL){

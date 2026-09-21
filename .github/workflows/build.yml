@@ -17,7 +17,7 @@ jobs:
 
       - name: Build NasmMakeC
         run: |
-          gcc -Wall -Wextra -std=c11 \
+          gcc \
             main.c \
             arg_interpretation.c \
             print.c \

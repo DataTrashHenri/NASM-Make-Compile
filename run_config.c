@@ -42,8 +42,12 @@ void run_help() {
 }
 void run_run(char *opt) {
     system("nasm -felf64 ./src/main.asm -o ./build/main.o");
+
     system("nasm -felf64 ~/nmc/libs/pout.asm -o ./build/pout.o");
-    system("ld ./build/main.o ./build/pout.o -o out");
+    system("nasm -felf64 ~/nmc/libs/alloc.asm -o ./build/alloc.o");
+    
+    system("ld ./build/main.o ./build/pout.o ./build/alloc.o -o out");
+
     log_std("Execution started");
     system("./out > ./build/out.bin");
     log_std("Execution finished");

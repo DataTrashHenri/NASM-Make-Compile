@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 
 #include "run_config.h"
 #include "print.h"
@@ -41,6 +42,7 @@ void run_help() {
         printf("- \033[32mnmc status\033[0m to check wheter project was set up correctly\n");
 }
 void run_run(char *opt) {
+    struct timespec start, end;
     system("nasm -felf64 ./src/main.asm -o ./build/main.o");
 
     system("nasm -felf64 ~/nmc/libs/pout.asm -o ./build/pout.o");
@@ -48,6 +50,16 @@ void run_run(char *opt) {
     
     system("ld ./build/main.o ./build/pout.o ./build/alloc.o -o out");
 
+    log_std("performance-run started");
+    clock_gettime(CLOCK_MONOTONIC, &start);
+    system("./out > /dev/null");
+    clock_gettime(CLOCK_MONOTONIC, &end);
+    log_std("performance-run ended");
+    double elapsed_ms =
+    (end.tv_sec - start.tv_sec) * 1000.0 +
+    (end.tv_nsec - start.tv_nsec) / 1e6;
+    printf("execution time: %.3f ms ( ~\033[32m%.3fms\033[0m pure asm)\n", elapsed_ms,(elapsed_ms-0.350));
+    
     log_std("Execution started");
     system("./out > ./build/out.bin");
     log_std("Execution finished");

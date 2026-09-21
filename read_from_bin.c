@@ -1,6 +1,7 @@
-#include "read_from_bin.h"
 #include <stdio.h>
 #include <stdlib.h>
+
+#include "read_from_bin.h"
 
 void read_bin_int() {
     FILE *ptr;

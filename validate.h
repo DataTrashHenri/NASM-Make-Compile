@@ -1,3 +1,5 @@
+#include <stdbool.h>
+
 #ifndef VALIDATE_H
 #define VALIDATE_H
 bool files_ok();

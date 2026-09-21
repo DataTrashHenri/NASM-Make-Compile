@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <dirent.h>
 #include <stdio.h>
+#include <stdbool.h>
 
 #include "validate.h"
 

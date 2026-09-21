@@ -1,6 +1,7 @@
-#include "print.h"
 #include <stdio.h>
 #include <dirent.h>
+
+#include "print.h"
 
 void log_std(char *str) {
     printf("--> %s\n",str);

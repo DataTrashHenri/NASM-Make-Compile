@@ -6,7 +6,7 @@
 
 #include "validate.h"
 
-bool valid_input(int argc,char** argv) {
+bool valid_input(int argc) {
     return argc > 1;
 }
 bool files_ok() {

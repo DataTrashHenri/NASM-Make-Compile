@@ -1,7 +1,7 @@
 global pout64_from_buffer,pout64_from_arg
 
 section .text
-	pout64_from_buffer:	;printf(rdi=buffer_location)
+	pout64_from_buffer:	;printf(rdi=buffer_location) NOT SAVED: rax,rsi,rdx
 	mov	rax,	1
 	mov	rsi,	rdi
 push	rdi

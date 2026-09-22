@@ -3,5 +3,6 @@
 
 void read_bin_int();
 void read_bin_float();
+void read_bin_bitwise();
 
 #endif

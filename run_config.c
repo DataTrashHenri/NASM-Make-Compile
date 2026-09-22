@@ -47,8 +47,10 @@ void run_run(char *opt) {
 
     system("nasm -felf64 ~/nmc/libs/pout.asm -o ./build/pout.o");
     system("nasm -felf64 ~/nmc/libs/alloc.asm -o ./build/alloc.o");
+    system("nasm -felf64 ~/nmc/libs/sqrt.asm -o ./build/sqrt.o");
+    system("nasm -felf64 ~/nmc/libs/sieve.asm -o ./build/sieve.o");
     
-    system("ld ./build/main.o ./build/pout.o ./build/alloc.o -o out");
+    system("ld ./build/*.o -o out");
 
     log_std("performance-run started");
     clock_gettime(CLOCK_MONOTONIC, &start);
@@ -68,9 +70,12 @@ void run_run(char *opt) {
             read_bin_int();
         else if (!strcmp(opt,"float"))
             read_bin_float();
+        else if (!strcmp(opt,"bit"))
+            read_bin_bitwise();
         else if (!strcmp(opt,"all")) {
             read_bin_float();
             read_bin_int();
+            read_bin_bitwise();
         }
         else log_std("unkonw type to convert");
     }

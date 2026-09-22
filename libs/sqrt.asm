@@ -42,4 +42,4 @@ ret					; RDI HOLDS SQRT
 
 section	.rodata
 HALF		dq	0.5
-THRESHOLD	dq	0.000001
+THRESHOLD	dq	0.00000000001

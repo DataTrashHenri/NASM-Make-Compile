@@ -58,7 +58,18 @@ void read_bin_bitwise() {
             printf("%i", (buffer[i] >> bit) & 1);
         }
 
-        printf("\033[0m\n");
+        printf("\033[0m  set: [");
+
+        int first = 1;
+        for (int bit = 0; bit < 8; bit++) {
+            if (((buffer[i] >> bit) & 1)) {
+                if (!first) printf(", ");
+                printf("%i", bit + i*8);
+                first = 0;
+            }
+        }
+
+        printf("]\n");
     }
     fclose(ptr);
     free(buffer);

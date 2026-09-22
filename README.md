@@ -1,6 +1,6 @@
 # NasmMakeC
 
-A small Linux x86-64 command-line project manager for NASM assembly programs. **NasmMakeC** (`nmc`) creates an assembly project layout, assembles and links the project, runs the resulting executable, and can decode the generated binary output as integers or floating-point values.
+A small Linux x86-64 command-line project manager for NASM assembly programs. **NasmMakeC** (`nmc`) creates an assembly project layout, assembles and links the project, runs the resulting executable, and reads binary output produced by the program.
 
 The project is implemented primarily in C, with low-level helper routines written in NASM assembly.
 
@@ -24,7 +24,7 @@ NasmMakeC currently targets **Linux x86-64** and expects the following tools:
 - GNU `ld`
 - Standard Linux utilities such as `mkdir`, `touch`, `echo`, and `rm`
 
-The runtime currently uses absolute library paths (`~/nmc/libs/...` and `/root/nmc/libs/`), so the project should be installed or cloned as `~/nmc`, or those paths should be updated in `run_config.c` before building.
+The runtime currently uses absolute library paths (`~/nmc/libs/...` and `/root/nmc/libs/`). Clone or install the project as `~/nmc`, or update the paths in `run_config.c` before building.
 
 ## Building
 
@@ -45,7 +45,7 @@ sudo install -m 755 nmc /usr/local/bin/nmc
 If you keep the repository at `~/nmc`, the built-in library paths used by `nmc run` will resolve automatically:
 
 ```bash
-git clone https://github.com/DataTrashHenri/NasmMakeC.git ~/nmc
+git clone https://github.com/DataTrashHenri/NASM-Make-Compile.git ~/nmc
 cd ~/nmc
 gcc -Wall -Wextra -std=c11 \
   main.c arg_interpretation.c print.c read_from_bin.c run_config.c validate.c \

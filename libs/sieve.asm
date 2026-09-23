@@ -111,18 +111,25 @@ lea	r10,	[rel buffer]
 
 
 xor	r14,	r14
-xor	rbx,	rbx
+xor	r9,	r9
+
 .sieve_loop:
+cmp	r9,	64
+jge	.next_qword
 
 mov 	rax,	[r10 + 8 * r14]
-shrx	rax,	rax,	rbx
+shrx	rax,	rax,	r9
 
-tzcnt	rbx,	rax
+tzcnt	rbx,	rax	;next 1 of rax, REALTIVE with r9(earlier prime this chunk)
 
-cmp	rbx,	64
+cmp	rbx,	64	;64= all 0s 0000000000000000000000... NEXT QB
 jl	.iter_loop
+
+.next_qword:
+
 inc	r14
-call	pout64_from_arg
+xor	r9,	r9
+;call	pout64_from_arg
 ;aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 
 ;check for last byte
@@ -133,7 +140,8 @@ cmp	rax,	rsi
 jge	.end
 jmp 	.sieve_loop
 
-.iter_loop:	;rbx is %64, r14 qbyte
+.iter_loop:	;rbx is %64 REL, r14 qbyte
+add	rbx,	r9
 
 mov	r15,	r14
 shl	r15,	6
@@ -141,7 +149,7 @@ add	r15,	rbx	; NEXT PRIME
 
 push rdi
 mov	rdi,	r15
-call	pout64_from_arg
+;call	pout64_from_arg
 pop rdi
 
 mov	rcx,	r15
@@ -150,7 +158,8 @@ push rbx		; NEEDED=>>>>>>> r14,(r10)
 call	sieve_prime_in_chunk
 pop rbx
 
-;inc	r14
+mov	r9,	rbx
+inc	r9
 
 ; last byte check
 mov     rax,    r14

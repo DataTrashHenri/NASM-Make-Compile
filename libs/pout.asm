@@ -13,13 +13,21 @@ pop	rdi
 
 	pout64_from_arg:		;printf(rdi=value to print)
 	mov	[buffer64],	rdi
+push rcx
+	push rax
 	mov	rax,		1
+	push rsi
 	mov	rsi,		buffer64
-push	rdi
+	push rdi
 	mov	rdi,		1
+	push rdx
 	mov	rdx,		8
 	syscall
-pop	rdi
+	pop rdx
+	pop rdi
+	pop rsi
+	pop rax
+pop rcx
 	ret
 
 section .data

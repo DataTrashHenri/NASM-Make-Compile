@@ -1,4 +1,4 @@
-extern pout64_from_arg,isqrt
+extern pout64_from_arg,isqrt, sieve_chunk
 global sieve_init, generate_base
 
 section .text
@@ -12,7 +12,7 @@ btr	%1,	%2
 ;------------------------functions--------------------
 	sieve_init:
 mov	rdi,	buffer
-mov	rcx,	125829120/8
+mov	rcx,	12960000/8
 mov	rax,	-1
 rep	stosq
 	ret
@@ -84,23 +84,78 @@ jmp next_mul
 
 mov	rdi,	[rsi]
 push rsi
-call pout64_from_arg
+;call pout64_from_arg
 pop rsi
 mov	rdi,	[rsi+8]
 push rsi
-call pout64_from_arg
+;call pout64_from_arg
 pop rsi
 mov     rdi,    [rsi+16]
 push rsi
-call pout64_from_arg
+;call pout64_from_arg
 pop rsi
 mov     rdi,    [rsi+24]
 push rsi
-call pout64_from_arg
+;call pout64_from_arg
 pop rsi
 
 ret
+;---------------------------END-BASE-----------------
 
+sieve_chunk:			;rdi = cstart, rsi= cend
+lea	r10,	[rel buffer]
+mov	rcx,	2
+call	sieve_prime_in_chunk
+ret
+sieve_prime_in_chunk:   ;rdi = cstart, rsi= cend, rcx= prime
+
+mov     rax,    rdi
+xor     rdx,    rdx
+div     rcx
+inc     rax             ; rax is 3600/p +1..
+cmp     rax,    rcx	; p vs. n
+cmovl	rax,	rcx	; n<p? n=p, bigger of both
+mul	rcx
+
+cmp	rax,	rsi
+jg	return
+
+start_marking:          ;intern, rax=   first multiple
+mov	r8,	rax
+shr	r8,	6	; R8 is 64-CHUNK
+
+mov	r9,	rax
+and	r9,	63	; R9 IS BIT
+
+
+mov	rbx,	[r10+ 8*r8]
+.loop:
+unset	rbx,	r9
+add	r9,	rcx	; += prime
+cmp	r9,	64
+jle	.loop
+
+mov 	[r10 + 8*r8],	rbx
+mov	r11,	r8
+shl	r11,	6
+add	r9,	r11		; 3602 +64...
+
+push	rdi
+mov	rdi,	[r10 + 8*r8]
+call	pout64_from_arg
+pop	rdi
+
+cmp	r9,	rsi
+jg 	.end
+mov	rax,	r9
+sub	rax,	rcx		; HÄHHH
+jmp	start_marking
+
+.end:
+        ret
+return:
+	ret
 ;---------------------------buffer--------------------
 section .bss
-	buffer resb 125829120	; just over 1b bits
+;	buffer resb 125829120	; just over 1b bits
+	buffer resb 12960000

@@ -106,12 +106,64 @@ sieve_chunk:			;rdi = cstart, rsi= cend
 lea	r10,	[rel buffer]
 
 
-mov	rcx,	2
-call	sieve_prime_in_chunk
+;mov	rcx,	2
+;call	sieve_prime_in_chunk
 
-mov	rcx,	3
+
+xor	r14,	r14
+xor	rbx,	rbx
+.sieve_loop:
+
+mov 	rax,	[r10 + 8 * r14]
+shrx	rax,	rax,	rbx
+
+tzcnt	rbx,	rax
+
+cmp	rbx,	64
+jl	.iter_loop
+inc	r14
+call	pout64_from_arg
+;aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+
+;check for last byte
+mov	rax,	r14
+shl	rax,	6
+add	rax,	64
+cmp	rax,	rsi
+jge	.end
+jmp 	.sieve_loop
+
+.iter_loop:	;rbx is %64, r14 qbyte
+
+mov	r15,	r14
+shl	r15,	6
+add	r15,	rbx	; NEXT PRIME
+
+push rdi
+mov	rdi,	r15
+call	pout64_from_arg
+pop rdi
+
+mov	rcx,	r15
+
+push rbx		; NEEDED=>>>>>>> r14,(r10)
 call	sieve_prime_in_chunk
-ret
+pop rbx
+
+;inc	r14
+
+; last byte check
+mov     rax,    r14
+shl     rax,    6
+add     rax,    64
+cmp     rax,    rsi
+jge     .end
+
+jmp	.sieve_loop
+
+.end:
+	ret
+
 sieve_prime_in_chunk:   ;rdi = cstart, rsi= cend, rcx= prime
 
 mov     rax,    rdi
@@ -146,8 +198,8 @@ shl	r11,	6
 add	r9,	r11		; 3602 +64...
 
 push	rdi
-mov	rdi,	[r10 + 8*r8]
-call	pout64_from_arg
+;mov	rdi,	[r10 + 8*r8]
+;call	pout64_from_arg
 pop	rdi
 
 cmp	r9,	rsi

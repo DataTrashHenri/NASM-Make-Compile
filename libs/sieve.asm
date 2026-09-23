@@ -104,7 +104,12 @@ ret
 
 sieve_chunk:			;rdi = cstart, rsi= cend
 lea	r10,	[rel buffer]
+
+
 mov	rcx,	2
+call	sieve_prime_in_chunk
+
+mov	rcx,	3
 call	sieve_prime_in_chunk
 ret
 sieve_prime_in_chunk:   ;rdi = cstart, rsi= cend, rcx= prime
@@ -146,9 +151,9 @@ call	pout64_from_arg
 pop	rdi
 
 cmp	r9,	rsi
-jg 	.end
+jge 	.end
 mov	rax,	r9
-sub	rax,	rcx		; HÄHHH
+;sub	rax,	rcx		; HÄHHH
 jmp	start_marking
 
 .end:
